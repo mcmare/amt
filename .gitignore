@@ -1,0 +1,8 @@
+/certs/
+/dev.env
+/.env
+/.smoke/
+/amt
+/amt-*
+*.exe
+*.log

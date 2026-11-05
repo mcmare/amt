@@ -1,0 +1,45 @@
+services:
+  peer:
+    profiles: ["peer"]
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${PEER_PORT:-443}:8443"
+    environment:
+      PEER_TOKEN: "${PEER_TOKEN:?set PEER_TOKEN in .env}"
+    volumes:
+      - ./certs:/certs:ro
+      - ./site:/site:ro
+    command:
+      - peer
+      - --listen
+      - :8443
+      - --cert
+      - /certs/peer.crt
+      - --key
+      - /certs/peer.key
+      - --exit
+      - ${EXIT_ADDRESS:-exit:9443}
+      - --stream-path
+      - ${STREAM_PATH:-/_edge/stream}
+      - --site-dir
+      - /site
+
+  exit:
+    profiles: ["exit"]
+    build: .
+    restart: unless-stopped
+    ports:
+      - "${EXIT_PORT:-9443}:9443"
+    environment:
+      EXIT_TOKEN: "${EXIT_TOKEN:?set EXIT_TOKEN in .env}"
+    volumes:
+      - ./certs:/certs:ro
+    command:
+      - exit
+      - --listen
+      - :9443
+      - --cert
+      - /certs/exit.crt
+      - --key
+      - /certs/exit.key

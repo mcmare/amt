@@ -1,0 +1,11 @@
+.git
+.github
+.env
+dev.env
+certs
+.smoke
+amt
+amt-*
+*.exe
+*.log
+*.key
